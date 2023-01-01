@@ -1,0 +1,76 @@
+version: "3.8"
+
+services:
+  mysqldb:
+    image: mysql:5.7
+    restart: unless-stopped
+    env_file: ./.env
+    environment:
+      - MYSQL_ROOT_PASSWORD=$MYSQLDB_ROOT_PASSWORD
+    ports:
+      - $MYSQLDB_LOCAL_PORT:$MYSQLDB_DOCKER_PORT
+    volumes:
+      - db:/var/lib/mysql
+      - "./sql/DB_DDL.sql:/docker-entrypoint-initdb.d/1.sql"
+    networks:
+      - db-network
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p12345678"]
+      timeout: 10s
+      retries: 10
+  doctorinbound:
+    depends_on:
+      - mysqldb
+    build:
+      context: ./
+      dockerfile: ./doctors-inbound/Dockerfile
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - 8181:8181
+    environment:
+      - DB_READ_HOST=mysqldb
+      - DB_READ_USER=app_user
+      - DB_READ_PASSWORD=MyP@ssw0rd
+      - DB_READ_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DB_WRITE_HOST=mysqldb
+      - DB_WRITE_USER=app_user
+      - DB_WRITE_PASSWORD=MyP@ssw0rd
+      - DB_WRITE_HOST_PORT=$MYSQLDB_DOCKER_PORT
+    volumes:
+      - .gradle:/root/.gradle
+    stdin_open: true
+    tty: true
+    networks:
+      - db-network
+  doctoroutbound:
+    depends_on:
+      - mysqldb
+    build:
+      context: ./
+      dockerfile: ./doctors-outbound/Dockerfile
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - 8182:8182
+    environment:
+      - DB_READ_HOST=mysqldb
+      - DB_READ_USER=app_user
+      - DB_READ_PASSWORD=MyP@ssw0rd
+      - DB_READ_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DB_WRITE_HOST=mysqldb
+      - DB_WRITE_USER=app_user
+      - DB_WRITE_PASSWORD=MyP@ssw0rd
+      - DB_WRITE_HOST_PORT=$MYSQLDB_DOCKER_PORT
+    volumes:
+      - .gradle:/root/.gradle
+    stdin_open: true
+    tty: true
+    networks:
+      - db-network
+
+networks:
+  db-network:
+    driver: bridge
+volumes:
+  db:
