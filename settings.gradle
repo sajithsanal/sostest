@@ -1,0 +1,10 @@
+rootProject.name = 'sostest'
+include 'doctors-inbound'
+include 'patients-inbound'
+include 'common-module'
+include 'doctors-outbound'
+include 'doctors-common'
+include 'patients-outbound'
+include 'patients-common'
+include 'common-lib'
+
