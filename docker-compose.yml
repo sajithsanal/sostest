@@ -18,7 +18,7 @@ services:
       test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost", "-u", "root", "-p12345678"]
       timeout: 10s
       retries: 10
-  app1:
+  doctorinbound:
     depends_on:
       - mysqldb
     build:
@@ -27,7 +27,32 @@ services:
     restart: on-failure
     env_file: ./.env
     ports:
-      - $SPRING_LOCAL_PORT:$SPRING_DOCKER_PORT
+      - 8181:8181
+    environment:
+      - DB_READ_HOST=mysqldb
+      - DB_READ_USER=app_user
+      - DB_READ_PASSWORD=MyP@ssw0rd
+      - DB_READ_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DB_WRITE_HOST=mysqldb
+      - DB_WRITE_USER=app_user
+      - DB_WRITE_PASSWORD=MyP@ssw0rd
+      - DB_WRITE_HOST_PORT=$MYSQLDB_DOCKER_PORT
+    volumes:
+      - .gradle:/root/.gradle
+    stdin_open: true
+    tty: true
+    networks:
+      - db-network
+  doctoroutbound:
+    depends_on:
+      - mysqldb
+    build:
+      context: ./
+      dockerfile: ./doctors-outbound/Dockerfile
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - 8182:8182
     environment:
       - DB_READ_HOST=mysqldb
       - DB_READ_USER=app_user

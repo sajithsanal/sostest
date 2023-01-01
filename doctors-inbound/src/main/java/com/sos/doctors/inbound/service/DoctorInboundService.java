@@ -4,7 +4,7 @@ import com.sos.common.config.DbContextHolder;
 import com.sos.common.config.DbType;
 import com.sos.common.constants.SOSConstants;
 import com.sos.common.exception.SOSException;
-import com.sos.doctors.common.dto.DoctorRequest;
+import com.sos.doctors.common.dto.DoctorDetailsDTO;
 import com.sos.doctors.common.dto.DoctorResponse;
 import com.sos.doctors.common.entity.DoctorsEntity;
 import com.sos.doctors.common.repository.DoctorsRepository;
@@ -27,7 +27,7 @@ public class DoctorInboundService {
     private DoctorsRepository doctorsRepository;
 
     @Transactional
-    public DoctorResponse createDoctor(DoctorRequest request) {
+    public DoctorResponse createDoctor(DoctorDetailsDTO request) {
 
         DbContextHolder.setDbType(DbType.MASTER);
         validateCreationRequest(request);
@@ -43,7 +43,7 @@ public class DoctorInboundService {
     }
 
     @Transactional
-    public DoctorResponse updateDoctor(DoctorRequest request) {
+    public DoctorResponse updateDoctor(DoctorDetailsDTO request) {
 
         DoctorResponse response;
         DbContextHolder.setDbType(DbType.MASTER);
@@ -107,7 +107,7 @@ public class DoctorInboundService {
 
     }
 
-    private void validateCreationRequest(DoctorRequest request) throws SOSException {
+    private void validateCreationRequest(DoctorDetailsDTO request) throws SOSException {
 
         if (request == null) {
             throw new SOSException("Request cannot be empty");
@@ -127,7 +127,7 @@ public class DoctorInboundService {
 
     }
 
-    private void validateUpdateRequest(DoctorRequest request) throws SOSException {
+    private void validateUpdateRequest(DoctorDetailsDTO request) throws SOSException {
 
         if (request == null) {
             throw new SOSException("Request cannot be empty");

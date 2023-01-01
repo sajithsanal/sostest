@@ -1,7 +1,6 @@
 package com.sos.doctors.inbound.controller;
 
-import com.sos.common.exception.SOSException;
-import com.sos.doctors.common.dto.DoctorRequest;
+import com.sos.doctors.common.dto.DoctorDetailsDTO;
 import com.sos.doctors.common.dto.DoctorResponse;
 import com.sos.doctors.inbound.service.DoctorInboundService;
 import org.slf4j.Logger;
@@ -13,7 +12,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 public class DoctorsInboundController {
 
-    Logger logger = LoggerFactory.getLogger(DoctorsInboundController.class);
 
 
     @Autowired
@@ -21,7 +19,7 @@ public class DoctorsInboundController {
 
     @PostMapping(value = "/doctor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    DoctorResponse createDoctor(@RequestBody DoctorRequest request) {
+    DoctorResponse createDoctor(@RequestBody DoctorDetailsDTO request) {
 
         return doctorInboundService.createDoctor(request);
 
@@ -30,7 +28,7 @@ public class DoctorsInboundController {
 
     @PutMapping(value = "/doctor", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    DoctorResponse updateDoctor(@RequestBody DoctorRequest request) {
+    DoctorResponse updateDoctor(@RequestBody DoctorDetailsDTO request) {
 
         return doctorInboundService.updateDoctor(request);
 

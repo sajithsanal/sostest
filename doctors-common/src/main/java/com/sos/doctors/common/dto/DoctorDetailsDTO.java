@@ -1,6 +1,6 @@
 package com.sos.doctors.common.dto;
 
-public class DoctorRequest {
+public class DoctorDetailsDTO {
     private Long id;
     private String fullName;
     private String specialization;
