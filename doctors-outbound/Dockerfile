@@ -2,12 +2,7 @@ FROM gradle:5.6.4-jdk11
 
 WORKDIR /doctors-outbound
 
-COPY ./common-lib .
-COPY ./common-module .
-COPY ./doctors-common .
-COPY ./doctors-outbound .
-COPY ./settings.gradle .
+COPY . .
+RUN gradle doctors-outbound:clean doctors-outbound:bootJar --no-daemon
 
-RUN gradle clean bootJar --no-daemon
-
-CMD gradle bootRun
+CMD gradle doctors-outbound:bootRun

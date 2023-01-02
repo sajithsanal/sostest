@@ -21,13 +21,18 @@ public class DoctorInboundControllerAdvice {
 
 
     @ExceptionHandler(SOSException.class)
-    public DoctorResponse handleValidationException(SOSException ex, WebRequest request) {
+    public ResponseEntity handleValidationException(SOSException ex, WebRequest request) {
 
-        DoctorResponse response = new DoctorResponse();
-        response.setStatus(String.valueOf(SOSConstants.ERROR));
-        response.setMessage(ex.getMessage());
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("status", String.valueOf(SOSConstants.ERROR));
+        body.put("message", ex.getMessage());
         logger.error("Validation Error --> " + ex.getMessage());
-        return response;
+
+        return new ResponseEntity<>(body, HttpStatus.OK);
+
+
+
     }
 
     @ExceptionHandler(Exception.class)

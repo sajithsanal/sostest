@@ -1,8 +1,8 @@
 FROM gradle:5.6.4-jdk11
 
-WORKDIR /doctors-inbound
+WORKDIR /patients-inbound
 COPY . .
 
-RUN gradle doctors-inbound:clean doctors-inbound:bootJar --no-daemon
+RUN gradle patients-inbound:clean patients-inbound:bootJar --no-daemon
 
-CMD gradle doctors-inbound:bootRun
+CMD gradle patients-inbound:bootRun
