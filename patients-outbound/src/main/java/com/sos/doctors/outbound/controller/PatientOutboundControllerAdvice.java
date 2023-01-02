@@ -1,4 +1,4 @@
-package com.sos.doctors.inbound.controller;
+package com.sos.doctors.outbound.controller;
 
 import com.sos.common.constants.SOSConstants;
 import com.sos.common.exception.SOSException;
@@ -14,23 +14,20 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 
 @ControllerAdvice
-public class PatientInboundControllerAdvice {
+public class PatientOutboundControllerAdvice {
 
-    Logger logger = LoggerFactory.getLogger(PatientInboundControllerAdvice.class);
+    Logger logger = LoggerFactory.getLogger(PatientOutboundControllerAdvice.class);
 
 
     @ExceptionHandler(SOSException.class)
-    public ResponseEntity handleValidationException(SOSException ex, WebRequest request) {
-
+    public ResponseEntity<Object> handleValidationException(SOSException ex, WebRequest request) {
 
         Map<String, Object> body = new LinkedHashMap<>();
         body.put("status", String.valueOf(SOSConstants.ERROR));
         body.put("message", ex.getMessage());
-        logger.error("Validation Error --> " + ex.getMessage());
+        logger.error(" Error --> " + ex.getMessage(), ex);
 
         return new ResponseEntity<>(body, HttpStatus.OK);
-
-
 
     }
 
@@ -44,5 +41,4 @@ public class PatientInboundControllerAdvice {
 
         return new ResponseEntity<>(body, HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
 }

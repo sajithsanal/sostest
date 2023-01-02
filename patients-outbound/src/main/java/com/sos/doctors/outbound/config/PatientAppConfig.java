@@ -1,4 +1,4 @@
-package com.sos.doctors.inbound.config;
+package com.sos.doctors.outbound.config;
 
 import com.sos.common.config.MySQLDBConfig;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
