@@ -1,8 +1,12 @@
 FROM gradle:5.6.4-jdk11
 
 WORKDIR /patients-outbound
-COPY . .
+RUN mkdir repo
+COPY . ./repo
 
-RUN gradle patients-outbound:clean patients-outbound:bootJar --no-daemon
+RUN gradle patients-outbound:clean patients-outbound:bootJar --no-daemon -p ./repo
 
-CMD gradle patients-outbound:bootRun
+RUN mv ./repo/patients-outbound/build/libs/* .
+RUN rm -rf ./repo
+
+ENTRYPOINT ["java", "-jar", "patients-outbound.jar"]

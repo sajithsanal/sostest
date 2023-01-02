@@ -91,7 +91,6 @@ services:
       - DOCTOR_OUTBOUND_URL=http://doctoroutbound:8182
     volumes:
       - .gradle:/root/.gradle
-    stdin_open: true
     tty: true
     networks:
       - db-network

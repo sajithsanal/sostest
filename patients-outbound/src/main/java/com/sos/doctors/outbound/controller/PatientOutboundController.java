@@ -27,7 +27,7 @@ public class PatientOutboundController {
 
     @GetMapping(value = "/patient/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    PatientDetailsDTO findPatient(@PathVariable("id") Long patientId) {
+    PatientDetailsDTO findPatient(@PathVariable("id") Long patientId) throws JsonProcessingException {
 
         return patientOutboundService.findPatient(patientId);
 

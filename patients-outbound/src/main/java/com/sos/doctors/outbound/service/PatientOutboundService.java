@@ -35,9 +35,18 @@ public class PatientOutboundService {
         logger.info("Total " + patientsEntityList.size() + " patients present in the system");
         List<PatientDetailsDTO> response = new ArrayList<>();
         ModelMapper modelMapper = new ModelMapper();
-        patientsEntityList.forEach(doc -> {
-            response.add(modelMapper.map(doc, PatientDetailsDTO.class));
-        });
+
+        for (PatientsEntity entity : patientsEntityList) {
+            logger.info("Patient name " + entity.getFullName() + " and doctor id is -> " + entity.getDoctorId());
+            PatientDetailsDTO patientDetailsDTO = modelMapper.map(entity, PatientDetailsDTO.class);
+            try {
+                patientDetailsDTO.setDoctorName(PatientUtil.getDoctorName(entity.getDoctorId()));
+            } catch (JsonProcessingException e) {
+                throw new RuntimeException(e);
+            }
+            response.add(patientDetailsDTO);
+        }
+
         DbContextHolder.clearDbType();
 
         return response;
@@ -45,7 +54,7 @@ public class PatientOutboundService {
     }
 
 
-    public PatientDetailsDTO findPatient(Long id) {
+    public PatientDetailsDTO findPatient(Long id) throws JsonProcessingException {
 
         try {
             DbContextHolder.setDbType(DbType.REPLICA);
@@ -57,7 +66,9 @@ public class PatientOutboundService {
                 logger.info("Found patient with id " + id);
                 PatientsEntity entity = optionalDoctorsEntity.get();
                 ModelMapper modelMapper = new ModelMapper();
-                return modelMapper.map(entity, PatientDetailsDTO.class);
+                PatientDetailsDTO patientDetailsDTO = modelMapper.map(entity, PatientDetailsDTO.class);
+                patientDetailsDTO.setDoctorName(PatientUtil.getDoctorName(entity.getDoctorId()));
+                return patientDetailsDTO;
 
             }
             logger.info("Unable to find patient with id " + id);
@@ -83,6 +94,7 @@ public class PatientOutboundService {
                 ModelMapper modelMapper = new ModelMapper();
                 PatientDetailsDTO patientDetailsDTO = modelMapper.map(entity, PatientDetailsDTO.class);
                 patientDetailsDTO.setDoctorName(PatientUtil.getDoctorName(entity.getDoctorId()));
+                return patientDetailsDTO;
 
             }
             logger.info("Unable to find doctor with name " + name);
@@ -93,7 +105,6 @@ public class PatientOutboundService {
 
 
     }
-
 
 
 }

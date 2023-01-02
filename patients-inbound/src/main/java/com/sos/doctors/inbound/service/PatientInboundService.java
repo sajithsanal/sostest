@@ -38,6 +38,7 @@ public class PatientInboundService {
         ModelMapper modelMapper = new ModelMapper();
         request.setId(null);
         PatientsEntity entity = modelMapper.map(request, PatientsEntity.class);
+        entity.setDoctorId(getDoctorId(request.getDoctorName()));
         patientsRepository.save(entity);
         DbContextHolder.clearDbType();
 
@@ -71,7 +72,7 @@ public class PatientInboundService {
             }
 
             if (StringUtils.hasLength(request.getDoctorName())) {
-                entity.setDoctorId(PatientUtil.getDoctorId(request.getDoctorName()));
+                entity.setDoctorId(getDoctorId(request.getDoctorName()));
             }
 
             if (request.getAge() != null) {
@@ -99,6 +100,7 @@ public class PatientInboundService {
         PatientResponse response;
         DbContextHolder.setDbType(DbType.MASTER);
 
+
         logger.info("Received delete request for doctor " + id);
 
 
@@ -108,7 +110,7 @@ public class PatientInboundService {
             patientsRepository.delete(entity);
             response = getResponse(SOSConstants.SUCCESS, "Deleted the doctor details successfully");
         } else {
-            response = getResponse(SOSConstants.ERROR, "Unable to find the doctor  with id " + id);
+            response = getResponse(SOSConstants.ERROR, "Unable to find the patient  with id " + id);
 
         }
         DbContextHolder.clearDbType();
@@ -148,20 +150,22 @@ public class PatientInboundService {
             throw new SOSException("Doctor name  cannot be empty");
         }
 
-        validateDoctorName(request);
 
 
 
     }
 
-    private void validateDoctorName(PatientDetailsDTO request) throws JsonProcessingException {
-        if (StringUtils.hasLength(request.getDoctorName())) {
-            Long id = PatientUtil.getDoctorId(request.getDoctorName());
+    private Long getDoctorId(String name) throws JsonProcessingException {
+        if (StringUtils.hasLength(name)) {
+            Long id = PatientUtil.getDoctorId(name);
+
             if(id == null){
-                throw new SOSException("Doctor Id  cannot be empty");
+                throw new SOSException("Doctor Name cannot find");
             }
+            return id;
 
         }
+        return null;
 
     }
 
@@ -178,7 +182,6 @@ public class PatientInboundService {
         if (request.getAge() != null && (request.getAge() < 0 || request.getAge() > 120)) {
             throw new SOSException("Age is not valid");
         }
-        validateDoctorName(request);
 
 
     }
