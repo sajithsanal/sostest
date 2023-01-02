@@ -1,5 +1,6 @@
 package com.sos.doctors.inbound.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sos.common.config.DbContextHolder;
 import com.sos.common.config.DbType;
 import com.sos.common.constants.SOSConstants;
@@ -8,15 +9,14 @@ import com.sos.patients.common.dto.PatientDetailsDTO;
 import com.sos.patients.common.dto.PatientResponse;
 import com.sos.patients.common.entity.PatientsEntity;
 import com.sos.patients.common.repository.PatientsRepository;
+import com.sos.patients.common.util.PatientUtil;
 import org.modelmapper.ModelMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
-import org.springframework.web.client.RestTemplate;
 
 import java.util.Optional;
 
@@ -30,7 +30,7 @@ public class PatientInboundService {
     private PatientsRepository patientsRepository;
 
     @Transactional
-    public PatientResponse createPatient(PatientDetailsDTO request) {
+    public PatientResponse createPatient(PatientDetailsDTO request) throws JsonProcessingException {
 
         DbContextHolder.setDbType(DbType.MASTER);
         validateCreationRequest(request);
@@ -46,7 +46,7 @@ public class PatientInboundService {
     }
 
     @Transactional
-    public PatientResponse updatePatient(PatientDetailsDTO request) {
+    public PatientResponse updatePatient(PatientDetailsDTO request) throws JsonProcessingException {
 
         PatientResponse response;
         DbContextHolder.setDbType(DbType.MASTER);
@@ -70,8 +70,8 @@ public class PatientInboundService {
                 entity.setAddress(request.getAddress());
             }
 
-            if (request.getDoctorId() != null) {
-                entity.setDoctorId(request.getDoctorId());
+            if (StringUtils.hasLength(request.getDoctorName())) {
+                entity.setDoctorId(PatientUtil.getDoctorId(request.getDoctorName()));
             }
 
             if (request.getAge() != null) {
@@ -118,7 +118,7 @@ public class PatientInboundService {
 
     }
 
-    private void validateCreationRequest(PatientDetailsDTO request) throws SOSException {
+    private void validateCreationRequest(PatientDetailsDTO request) throws SOSException, JsonProcessingException {
 
         if (request == null) {
             throw new SOSException("Request cannot be empty");
@@ -144,23 +144,20 @@ public class PatientInboundService {
             throw new SOSException("Age is not valid");
         }
 
-        if (request.getDoctorId() == null) {
-            throw new SOSException("Doctor Id  cannot be empty");
+        if (!StringUtils.hasLength(request.getDoctorName())) {
+            throw new SOSException("Doctor name  cannot be empty");
         }
 
-        validateDoctorId(request);
+        validateDoctorName(request);
 
 
 
     }
 
-    private void validateDoctorId(PatientDetailsDTO request){
-        if (request.getDoctorId() != null) {
-            RestTemplate restTemplate = new RestTemplate();
-            String doctorOutboundUrl = System.getenv().get("DOCTOR_OUTBOUND_URL");
-            ResponseEntity<String> response = restTemplate.getForEntity(doctorOutboundUrl + "/doctor/" + request.getDoctorId(), String.class);
-            String responseBody = response.getBody();
-            if(responseBody.contains("ERROR")){
+    private void validateDoctorName(PatientDetailsDTO request) throws JsonProcessingException {
+        if (StringUtils.hasLength(request.getDoctorName())) {
+            Long id = PatientUtil.getDoctorId(request.getDoctorName());
+            if(id == null){
                 throw new SOSException("Doctor Id  cannot be empty");
             }
 
@@ -168,7 +165,7 @@ public class PatientInboundService {
 
     }
 
-    private void validateUpdateRequest(PatientDetailsDTO request) throws SOSException {
+    private void validateUpdateRequest(PatientDetailsDTO request) throws SOSException, JsonProcessingException {
 
         if (request == null) {
             throw new SOSException("Request cannot be empty");
@@ -181,7 +178,7 @@ public class PatientInboundService {
         if (request.getAge() != null && (request.getAge() < 0 || request.getAge() > 120)) {
             throw new SOSException("Age is not valid");
         }
-        validateDoctorId(request);
+        validateDoctorName(request);
 
 
     }

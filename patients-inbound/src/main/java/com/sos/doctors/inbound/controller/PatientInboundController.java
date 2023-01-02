@@ -1,5 +1,6 @@
 package com.sos.doctors.inbound.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.sos.doctors.inbound.service.PatientInboundService;
 import com.sos.patients.common.dto.PatientDetailsDTO;
 import com.sos.patients.common.dto.PatientResponse;
@@ -16,7 +17,7 @@ public class PatientInboundController {
 
     @PostMapping(value = "/patient", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    PatientResponse createDoctor(@RequestBody PatientDetailsDTO request) {
+    PatientResponse createDoctor(@RequestBody PatientDetailsDTO request) throws JsonProcessingException {
 
         return patientInboundService.createPatient(request);
 
@@ -25,7 +26,7 @@ public class PatientInboundController {
 
     @PutMapping(value = "/patient", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
     public @ResponseBody
-    PatientResponse updateDoctor(@RequestBody PatientDetailsDTO request) {
+    PatientResponse updateDoctor(@RequestBody PatientDetailsDTO request) throws JsonProcessingException {
 
         return patientInboundService.updatePatient(request);
 

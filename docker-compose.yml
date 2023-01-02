@@ -69,6 +69,59 @@ services:
     networks:
       - db-network
 
+  patientinbound:
+    depends_on:
+      - mysqldb
+    build:
+      context: ./
+      dockerfile: ./patients-inbound/Dockerfile
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - 8183:8183
+    environment:
+      - DB_READ_HOST=mysqldb
+      - DB_READ_USER=app_user
+      - DB_READ_PASSWORD=MyP@ssw0rd
+      - DB_READ_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DB_WRITE_HOST=mysqldb
+      - DB_WRITE_USER=app_user
+      - DB_WRITE_PASSWORD=MyP@ssw0rd
+      - DB_WRITE_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DOCTOR_OUTBOUND_URL=http://doctoroutbound:8182
+    volumes:
+      - .gradle:/root/.gradle
+    stdin_open: true
+    tty: true
+    networks:
+      - db-network
+  patientoutbound:
+    depends_on:
+      - mysqldb
+    build:
+      context: ./
+      dockerfile: ./patients-outbound/Dockerfile
+    restart: on-failure
+    env_file: ./.env
+    ports:
+      - 8184:8184
+    environment:
+      - DB_READ_HOST=mysqldb
+      - DB_READ_USER=app_user
+      - DB_READ_PASSWORD=MyP@ssw0rd
+      - DB_READ_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DB_WRITE_HOST=mysqldb
+      - DB_WRITE_USER=app_user
+      - DB_WRITE_PASSWORD=MyP@ssw0rd
+      - DB_WRITE_HOST_PORT=$MYSQLDB_DOCKER_PORT
+      - DOCTOR_OUTBOUND_URL=http://doctoroutbound:8182
+    volumes:
+      - .gradle:/root/.gradle
+    stdin_open: true
+    tty: true
+    networks:
+      - db-network
+
 networks:
   db-network:
     driver: bridge

@@ -9,7 +9,16 @@ public class PatientDetailsDTO {
     private String address;
     private Long age;
     private String contactNumber;
-    private Long doctorId;
+
+    private String doctorName;
+
+    public String getDoctorName() {
+        return doctorName;
+    }
+
+    public void setDoctorName(String doctorName) {
+        this.doctorName = doctorName;
+    }
 
     public Long getId() {
         return id;
@@ -51,11 +60,5 @@ public class PatientDetailsDTO {
         this.contactNumber = contactNumber;
     }
 
-    public Long getDoctorId() {
-        return doctorId;
-    }
 
-    public void setDoctorId(Long doctorId) {
-        this.doctorId = doctorId;
-    }
 }
