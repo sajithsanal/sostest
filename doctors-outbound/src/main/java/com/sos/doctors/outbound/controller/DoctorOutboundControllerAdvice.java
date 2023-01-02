@@ -29,7 +29,7 @@ public class DoctorOutboundControllerAdvice {
         body.put("message", ex.getMessage());
         logger.error(" Error --> " + ex.getMessage(), ex);
 
-        return new ResponseEntity<>(body, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(body, HttpStatus.OK);
 
     }
 

@@ -36,4 +36,11 @@ public class DoctorOutboundController {
 
     }
 
+    @GetMapping(value = "/doctor", produces = MediaType.APPLICATION_JSON_VALUE)
+    public @ResponseBody
+    DoctorDetailsDTO getDoctor(@RequestParam("name") String doctorName) {
+
+        return doctorOutboundService.findDoctor(doctorName);
+
+    }
 }

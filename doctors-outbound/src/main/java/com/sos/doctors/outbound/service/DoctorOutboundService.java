@@ -69,5 +69,29 @@ public class DoctorOutboundService {
 
     }
 
+    public DoctorDetailsDTO findDoctor(String name) {
+
+        try {
+            DbContextHolder.setDbType(DbType.REPLICA);
+
+            logger.info("Received request for doctor with name " + name);
+
+            Optional<DoctorsEntity> optionalDoctorsEntity = doctorsRepository.findByFullNameIgnoreCase(name);
+            if (optionalDoctorsEntity.isPresent()) {
+                logger.info("Found doctor with name " + name);
+                DoctorsEntity entity = optionalDoctorsEntity.get();
+                ModelMapper modelMapper = new ModelMapper();
+                return modelMapper.map(entity, DoctorDetailsDTO.class);
+
+            }
+            logger.info("Unable to find doctor with name " + name);
+            throw new SOSException("Unable to find a doctor with name " + name);
+        } finally {
+            DbContextHolder.clearDbType();
+        }
+
+
+    }
+
 
 }

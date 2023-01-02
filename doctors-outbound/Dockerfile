@@ -2,12 +2,12 @@ FROM gradle:5.6.4-jdk11
 
 WORKDIR /doctors-outbound
 
-COPY ./common-lib .
-COPY ./common-module .
-COPY ./doctors-common .
-COPY ./doctors-outbound .
-COPY ./settings.gradle .
+RUN mkdir repo
+COPY . ./repo
 
-RUN gradle clean bootJar --no-daemon
+RUN gradle doctors-outbound:clean doctors-outbound:bootJar --no-daemon -p ./repo
 
-CMD gradle bootRun
+RUN mv ./repo/doctors-outbound/build/libs/* .
+RUN rm -rf ./repo
+
+ENTRYPOINT ["java", "-jar", "doctors-outbound.jar"]
