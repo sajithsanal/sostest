@@ -1,13 +1,13 @@
-FROM gradle:5.6.4-jdk11
+FROM gradle:5.6.4-jdk11 AS build
+COPY --chown=gradle:gradle . /home/gradle/src
+WORKDIR /home/gradle/src
+RUN gradle doctors-outbound:clean doctors-outbound:bootJar --no-daemon
 
-WORKDIR /doctors-outbound
+FROM openjdk:11-jre-slim
 
-RUN mkdir repo
-COPY . ./repo
+RUN mkdir /app
 
-RUN gradle doctors-outbound:clean doctors-outbound:bootJar --no-daemon -p ./repo
+COPY --from=build /home/gradle/src/doctors-outbound/build/libs/*.jar  /app/doctors-outbound.jar
 
-RUN mv ./repo/doctors-outbound/build/libs/* .
-RUN rm -rf ./repo
 
-ENTRYPOINT ["java", "-jar", "doctors-outbound.jar"]
+ENTRYPOINT ["java", "-jar", "/app/doctors-outbound.jar"]

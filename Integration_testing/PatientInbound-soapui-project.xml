@@ -4,14 +4,14 @@
   "address": "Address1",
   "contactNumber": "4645774345634",
   "age": 35,
-  "doctorName": "Sajith Sanal"
+  "doctorName": "Sajjith Sanal"
 
 }</con:request><con:originalUri>http://localhost/patient</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="request2" id="3d5cd1b3-bb14-422d-8303-a7aa7e22fc33" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8183</con:endpoint><con:request>{
   "fullName": "Rohan",
   "address": "Address1",
   "contactNumber": "4645774345634",
   "age": 34,
-  "doctorName": "Sajith Sanal"
+  "doctorName": "Sajjith Sanal"
 
 }</con:request><con:originalUri>http://localhost/patient</con:originalUri><con:credentials><con:authType>No Authorization</con:authType></con:credentials><con:jmsConfig JMSDeliveryMode="PERSISTENT"/><con:jmsPropertyConfig/><con:parameters/></con:request><con:request name="request3" id="8fa246b0-267d-4d0e-89de-e7622352e3b9" mediaType="application/json" postQueryString="false"><con:settings><con:setting id="com.eviware.soapui.impl.wsdl.WsdlRequest@request-headers">&lt;xml-fragment/></con:setting></con:settings><con:endpoint>http://localhost:8183</con:endpoint><con:request>{
   "fullName": "Aaron",
