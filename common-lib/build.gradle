@@ -12,6 +12,7 @@ repositories {
 dependencies {
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-web', version: '2.7.7'
     compile group: 'org.springframework.boot', name: 'spring-boot-starter-data-jpa', version: '2.7.7'
+    compile group: 'org.springframework.boot', name: 'spring-boot-starter-actuator', version: '2.7.7'
     compile group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '2.3.4.RELEASE'
     compile group: 'org.modelmapper', name: 'modelmapper', version: '2.3.8'
     compile group: 'mysql', name: 'mysql-connector-java', version: '8.0.21'
